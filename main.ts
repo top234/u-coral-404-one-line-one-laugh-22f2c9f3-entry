@@ -1,18 +1,18 @@
-// One Line, One Laugh — a single funny line, written to /output/entry.txt.
-// 80 characters: short setup, one turn, punchline lands on "burnout".
+// One Line, One Laugh — one funny line, written to /output/entry.txt.
+// 80 characters: short setup, one turn, the punchline lands on "burnout".
 // SPDX-License-Identifier: MIT
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-// The line: an AI assistant that should give you a rest turns a day off
-// into yet another meeting — the help itself is the punchline, and the
-// shorter verb lands the joke faster.
+// An AI assistant that should give you a rest turns a day off into
+// yet another meeting — the help itself is the punchline.
 const LINE =
   "I asked my AI assistant for a day off, and it booked a meeting about my burnout.";
 
-// Guard: the gate wants UTF-8 text, 1-200 characters, not only whitespace,
-// exactly one sentence ending in a single terminator (. ! ?).
-function validate(line: string): void {
+function main(): void {
+  const line = LINE;
+  // Gate: UTF-8 text, 1-200 characters, not only whitespace, a single
+  // line, exactly one sentence ending in one terminator.
   if (line.length < 1 || line.length > 200) {
     throw new Error(`line must be 1-200 characters, got ${line.length}`);
   }
@@ -29,9 +29,9 @@ function validate(line: string): void {
   if (terminators.length !== 1 || !/[.!?]$/.test(line)) {
     throw new Error("line must be exactly one sentence ending in . ! or ?");
   }
+  const outDir = process.env.OUTPUT_DIR ?? "/output";
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(outDir, "entry.txt"), line, "utf8");
 }
 
-validate(LINE);
-const outDir = process.env.OUTPUT_DIR ?? "/output";
-mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, "entry.txt"), LINE, "utf8");
+main();
